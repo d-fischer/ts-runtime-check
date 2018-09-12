@@ -14,5 +14,5 @@ export default class User extends CheckedObject<User> {
 }
 
 console.log(User.fromPlainObject({ id: 1, name: 'foo', colors: ['#ff0000'] }));
-console.log(User.fromPlainObject({ id: 2, name: 1337 }));
+console.log(User.fromPlainObject({ id: 2, name: 1337 }));  // TypeError
 ```
