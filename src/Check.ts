@@ -1,0 +1,42 @@
+import 'reflect-metadata';
+import CheckedObject, { CheckedProperty, CheckedPropertyOptions } from './CheckedObject';
+import Validator from './Type/Validator';
+import NumberValidator from './Type/NumberValidator';
+import StringValidator from './Type/StringValidator';
+import ArrayValidator from './Type/ArrayValidator';
+
+interface OptionsWithType extends CheckedPropertyOptions {
+	type?: Validator;
+}
+
+// tslint:disable-next-line:only-arrow-functions
+const Check = (type?: Validator, options: OptionsWithType = {}): PropertyDecorator => function <T>(target: CheckedObject<T>, propertyKey: string) {
+	if (!type) {
+		const inferredType = Reflect.getMetadata('design:type', target, propertyKey);
+		if (inferredType === Object) {
+			throw new Error(`Type of property '${propertyKey}' can't be inferred, please specify it manually`);
+		}
+		switch (inferredType) {
+			case Number: {
+				type = NumberValidator;
+				break;
+			}
+			case String: {
+				type = StringValidator;
+				break;
+			}
+			case Array: {
+				console.warn(`Warning: Property '${propertyKey}' has been inferred as an untyped array. If you want to validate the array elements, please specify the type manually.`);
+				type = ArrayValidator;
+				break;
+			}
+			default: {
+				throw new Error(`Type of property '${propertyKey}' can't be inferred, please specify it manually`);
+			}
+		}
+	}
+	const propOptions: CheckedProperty = { ...options, name: propertyKey, type };
+	(target.constructor as typeof CheckedObject).addCheckedProperty(propOptions);
+};
+
+export default Check;
