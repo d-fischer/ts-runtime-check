@@ -4,6 +4,7 @@ import Validator from './Type/Validator';
 import NumberValidator from './Type/NumberValidator';
 import StringValidator from './Type/StringValidator';
 import ArrayValidator from './Type/ArrayValidator';
+import ClassValidator from './Type/ClassValidator';
 
 interface OptionsWithType extends CheckedPropertyOptions {
 	type?: Validator;
@@ -30,8 +31,14 @@ const Check = (type?: Validator, options: OptionsWithType = {}): PropertyDecorat
 				type = ArrayValidator;
 				break;
 			}
-			default: {
+			case Object: {
 				throw new Error(`Type of property '${propertyKey}' can't be inferred, please specify it manually`);
+			}
+			case Symbol: {
+				throw new Error('Symbols are not supported yet in `ts-runtime-check`');
+			}
+			default: {
+				type = ClassValidator(inferredType);
 			}
 		}
 	}
