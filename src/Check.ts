@@ -28,12 +28,13 @@ Please enable it or specify explicit types for every property.`);
 				break;
 			}
 			case Array: {
-				console.warn(`Warning: Property '${propertyKey}' has been inferred as an untyped array. If you want to validate the array elements, please specify the type manually.`);
+				console.warn(`Warning: Property '${propertyKey}' has been determined as an untyped array.
+If you want to validate the array elements, please specify the type manually using \`Type.Array.of()\`.`);
 				type = ArrayValidator;
 				break;
 			}
 			case Object: {
-				throw new Error(`Type of property '${propertyKey}' can't be inferred, please specify it manually`);
+				throw new Error(`Type of property '${propertyKey}' can't be determined, please specify it manually`);
 			}
 			case Symbol: {
 				throw new Error('Symbols are not supported yet in `ts-runtime-check`');
