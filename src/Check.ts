@@ -14,6 +14,10 @@ interface OptionsWithType extends CheckedPropertyOptions {
 const Check = (type?: Validator, options: OptionsWithType = {}): PropertyDecorator => function <T>(target: CheckedObject<T>, propertyKey: string) {
 	if (!type) {
 		const inferredType = Reflect.getMetadata('design:type', target, propertyKey);
+		if (inferredType === undefined) {
+			throw new Error(`\`ts-runtime-check\` requires you to enable the \`emitDecoratorMetadata\` TypeScript compiler option in order to use design-time types.
+Please enable it or specify explicit types for every property.`);
+		}
 		switch (inferredType) {
 			case Number: {
 				type = NumberValidator;
