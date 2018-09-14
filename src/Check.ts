@@ -14,9 +14,6 @@ interface OptionsWithType extends CheckedPropertyOptions {
 const Check = (type?: Validator, options: OptionsWithType = {}): PropertyDecorator => function <T>(target: CheckedObject<T>, propertyKey: string) {
 	if (!type) {
 		const inferredType = Reflect.getMetadata('design:type', target, propertyKey);
-		if (inferredType === Object) {
-			throw new Error(`Type of property '${propertyKey}' can't be inferred, please specify it manually`);
-		}
 		switch (inferredType) {
 			case Number: {
 				type = NumberValidator;
